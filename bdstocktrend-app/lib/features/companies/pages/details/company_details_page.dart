@@ -1,6 +1,5 @@
 import 'package:bd_stock_trend/common/widget/line_chart_sample3.dart';
 import 'package:bd_stock_trend/common/widget/line_chart_sample4.dart';
-import 'package:bd_stock_trend/core/resources/dimens.dart';
 import 'package:bd_stock_trend/core/resources/styles.dart';
 import 'package:bd_stock_trend/core/widgets/widgets.dart';
 import 'package:bd_stock_trend/features/companies/domain/entities/company_details.dart';
