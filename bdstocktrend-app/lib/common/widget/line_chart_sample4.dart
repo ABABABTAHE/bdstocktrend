@@ -88,6 +88,11 @@ class _LineChartSample4State extends State<LineChartSample4> {
       );
     }).toList();
 
+    print('[CHART_DEBUG] Historical data (data1): ${widget.data1.length} points, range: ${widget.data1.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data1.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
+    print('[CHART_DEBUG] Forecast data (data2): ${widget.data2.length} points, range: ${widget.data2.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data2.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
+    print('[CHART_DEBUG] data1 values: ${widget.data1.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
+    print('[CHART_DEBUG] data2 values: ${widget.data2.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
+
     _values2.insert(0, _values1.last);
 
     _minX = min(_values1.first.x, _values2.first.x);
@@ -227,7 +232,7 @@ class _LineChartSample4State extends State<LineChartSample4> {
               );
               final value = touchedSpot.y;
               return LineTooltipItem(
-                '${DateFormat('EEE MMM dd').format(time)}\nIndex: ${value.toStringAsFixed(4)}',
+                '${DateFormat('EEE MMM dd').format(time)}\nPrice: ${value.toStringAsFixed(2)}',
                 const TextStyle(color: Colors.white),
               );
             }).toList();

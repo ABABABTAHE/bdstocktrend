@@ -12,7 +12,7 @@ from app.config import settings
 logger.info(f"Config loaded. Database: {settings.db_name}, User: {settings.db_user}")
 
 from app.db import close_db, init_db
-from app.modeling import forecast_next_days, list_codes, schedule_training
+from app.modeling import forecast_next_days, get_model_status, list_codes, schedule_training
 
 logger.info("All dependencies imported successfully")
 
@@ -147,3 +147,29 @@ def predict(code: str) -> dict:
         raise HTTPException(status_code=500, detail=str(e))
 
     return {"predictions": preds}
+
+
+@app.get("/meta/{code}")
+def meta(code: str) -> dict:
+    """Lightweight diagnostics for a single code.
+
+    Useful to verify the engine is connected to the expected DB and that the
+    model is trained up to the latest historical date.
+    """
+
+    try:
+        status = get_model_status(code)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return {
+        "engine": {
+            "app": settings.app_name,
+            "version": settings.app_version,
+            "db_host": settings.db_host,
+            "db_name": settings.db_name,
+        },
+        "status": status,
+    }

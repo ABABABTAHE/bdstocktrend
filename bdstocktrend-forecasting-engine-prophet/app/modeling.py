@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import shutil
 import threading
 from concurrent.futures import Future, ThreadPoolExecutor
@@ -13,6 +14,8 @@ import pandas as pd
 
 from app.config import settings
 from app.db import get_db
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -187,9 +190,13 @@ def train_model(code: str) -> None:
     _ensure_prophet_ready()
     from prophet import Prophet
 
+    logger.info(f"[TRAIN_START] Training model for code={code}")
     df = _load_series(code)
     if df.empty or len(df) < 2:
+        logger.error(f"[TRAIN_ERROR] Not enough data for code={code}, rows={len(df)}")
         raise ValueError(f"Not enough data to train model for code={code}")
+
+    logger.info(f"[TRAIN_DATA] code={code}, historical_data_points={len(df)}, date_range={df['ds'].min()}_to_{df['ds'].max()}")
 
     model = Prophet(
         interval_width=settings.interval_width,
@@ -209,6 +216,7 @@ def train_model(code: str) -> None:
             row_count=len(df),
         )
     )
+    logger.info(f"[TRAIN_DONE] Model trained for code={code}, trained_until={trained_until}")
 
 
 def _train_model_locked(code: str) -> None:
@@ -268,15 +276,20 @@ def _next_bd_trading_days(start: date, n: int) -> list[pd.Timestamp]:
 
 
 def forecast_next_days(code: str) -> list[dict[str, Any]]:
+    logger.info(f"[FORECAST_START] code={code}")
     ensure_trained(code)
     model = _load_model(code)
     if model is None:
+        logger.error(f"[FORECAST_ERROR] Model missing after training for code={code}")
         raise RuntimeError(f"Model missing after training for code={code}")
 
     # Forecast next N Bangladesh trading days (Sun-Thu), skipping Fri/Sat.
     last_observed = _db_max_date(code)
     if last_observed is None:
+        logger.error(f"[FORECAST_ERROR] No historical data found for code={code}")
         raise ValueError(f"No historical data found for code={code}")
+    
+    logger.info(f"[FORECAST_DATA] code={code}, last_observed={last_observed}, forecast_days={settings.forecast_days}")
     future = pd.DataFrame({"ds": _next_bd_trading_days(last_observed, settings.forecast_days)})
     forecast = model.predict(future)
 
@@ -306,5 +319,36 @@ def forecast_next_days(code: str) -> list[dict[str, Any]]:
                 "close": yhat,
             }
         )
+        logger.info(f"[PREDICTION] code={code}, date={ds}, close={yhat:.2f}, high={yhat_upper:.2f}, low={yhat_lower:.2f}")
 
+    logger.info(f"[FORECAST_DONE] code={code}, predictions_count={len(out)}")
     return out
+
+
+def get_model_status(code: str) -> dict[str, Any]:
+    """Return lightweight diagnostics for a code.
+
+    This is intentionally non-training (no model fit) so it can be used to
+    diagnose deployment/config issues (like pointing to the wrong DB).
+    """
+
+    code = (code or "").strip()
+    if not code:
+        raise ValueError("code is required")
+
+    meta = _read_meta(code)
+    db_max = _db_max_date(code)
+
+    return {
+        "code": code,
+        "db_max_date": db_max.isoformat() if db_max else None,
+        "model": (
+            {
+                "trained_until": meta.trained_until.isoformat(),
+                "trained_at": meta.trained_at.isoformat(),
+                "row_count": meta.row_count,
+            }
+            if meta
+            else None
+        ),
+    }

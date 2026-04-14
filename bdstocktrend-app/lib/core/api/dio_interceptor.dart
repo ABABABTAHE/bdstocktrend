@@ -54,6 +54,24 @@ class DioInterceptor extends Interceptor {
 
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
     final String prettyJson = encoder.convert(response.data);
+
+    try {
+      final path = response.requestOptions.path;
+      final data = response.data;
+      if (path.contains('/api/companies/') && data is Map<String, dynamic>) {
+        final debug = data['debug'];
+        if (debug is Map) {
+          log.d(
+            'COMPANY_DEBUG ► hasAccess=${debug['hasAccess']} '
+            'lastHistoricalDate=${debug['lastHistoricalDate']} '
+            'predictionsLatestCreatedAt=${debug['predictionsLatestCreatedAt']} '
+            'predictionsMaxDate=${debug['predictionsMaxDate']} '
+            'forecastStatus=${debug['forecastStatus']}',
+          );
+        }
+      }
+    } catch (_) {}
+
     log.d(
       // ignore: unnecessary_null_comparison
       "◀ ︎RESPONSE ${response.statusCode} ${response.requestOptions != null ? (response.requestOptions.baseUrl + response.requestOptions.path) : 'URL'}\n\n"
