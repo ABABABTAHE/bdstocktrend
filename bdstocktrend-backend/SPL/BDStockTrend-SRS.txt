@@ -1,682 +1,0 @@
-
-Software Requirements
-Specification
-of
-BDStockTrend
-Prepared by
-Arnab Dey
-ASH1925024M
-
-Institute of Information Technology
-Noakhali Science and Technology University
-26.04.2024
-
-
-Table of Contents
-1.	Introduction	1-2
-1.1	Problem Statement	1-2
-1.2	Purpose	1-2
-1.3	Project Scope	1-3
-1.4	Glossary	1-3
-1.5	References	1-4
-2.	Stakeholders and Characteristics	2-4
-2.1	Premium App User	2-4
-2.2	Free App User	2-4
-2.3	External API User	2-4
-2.4	Developer	2-5
-3.	Design and Implementation Constraints	3-5
-3.1	Mobile Application Development	3-5
-4.	Requirement Specification	4-7
-4.1	Functional Requirement	4-7
-4.1.1	User login and register	4-7
-4.1.3	Listed companies	4-8
-4.1.7	Paid external APIs	4-10
-4.2	Data Requirement	4-10
-4.2.1	Live data and regular data update	4-10
-4.3	Performance Requirement	4-11
-4.3.1	Higher speed and low latency	4-11
-4.3.2	Capacity Requirements	4-12
-4.3.3	Scalability of Services	4-12
-4.4	Maintainability and Supportability	4-12
-4.4.1	Maintenance Requirements	4-12
-4.4.2	Supportability Requirements	4-12
-5.	Requirement Engineering Process	5-13
-5.1	Requirement Elicitation Techniques	5-13
-5.1.1	Hold Interviews	5-13
-5.1.2	Perform Document Analysis	5-13
-5.1.3	System Interface Analysis	5-13
-5.1.4	Distribute Questionnaires	5-13
-5.2	Requirement Validation	5-14
-5.2.1	Review the Requirements	5-14
-5.2.2	Test the Requirements	5-14
-5.2.3	Simulate the requirements	5-14
-6.	Use Case Diagram	6-15
-7.	Use Case Description	7-16
-7.1	Use Case - Register	7-16
-7.2	Use Case - Login	7-17
-7.3	Use Case - View DSE Dashboard	7-18
-7.4	Use Case - Browse Company List	7-19
-7.5	Use Case - View Company Details	7-20
-7.6	Use Case - View Historical Data Plots	7-21
-7.7	Use Case - Get Stock Forecast	7-22
-7.8	Use Case - Access Company Historical Data (API User)	7-23
-7.9	Use Case - Access Stock Prediction Data (API User)	7-24
-8.	Activity Diagram	8-25
-8.1	Use Case - Register	8-25
-8.2	Use Case - Login	8-26
-8.3	Use Case - View DSE Dashboard	8-27
-8.4	Use Case - Browse Company List	8-28
-8.5	Use Case - View Company Details	8-29
-8.6	Use Case - View Historical Data Plots	8-30
-8.7	Use Case - Get Stock Forecast	8-31
-8.8	Use Case - Access Company Historical Data (API User)	8-32
-8.9	Use Case - Access Stock Prediction Data (API User)	8-33
-9.	Appendix	9-34
-9.1	Prioritization of requirements	9-34
-9.1.1	Three-level Scale	9-34
-9.1.2	Prioritization of the requirements of BDStockTrend	9-34
-
-
-
-
-List of Tables
-Table 1: Register	7-16
-Table 2: Login	7-17
-Table 3: View DSE Dashboard	7-18
-Table 4: Browse Company List	7-19
-Table 5: View Company Details	7-20
-Table 6: View Historical Data Plots	7-21
-Table 7: Get Stock Forecast	7-22
-Table 8: Access Company Historical Data (API User)	7-23
-Table 9: Access Stock Prediction Data (API User)	7-24
-
-
-
-
-
-List of Figures
-Figure 1: Use Case Diagram	6-15
-Figure 2: Activity Diagram of Register	8-25
-Figure 3: Activity Diagram of Login	8-26
-Figure 4: Activity Diagram of View DSE Dashboard	8-27
-Figure 5: Activity Diagram of Browse Company List	8-28
-Figure 6: Activity Diagram of View Company Details	8-29
-Figure 7: Activity Diagram of View Historical Data Plots	8-30
-Figure 8: Activity Diagram of Get Stock Forecast	8-31
-Figure 9: Activity Diagram of Access Company Historical Data	8-32
-Figure 10: Activity Diagram of Access Stock Prediction Data	8-33
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-1. Introduction
-The introduction of the Software Requirements Specification (SRS) provides an overview of the entire SRS with purpose, scope, abbreviations, references and overview of the SRS. The aim of this document is to gather and analyze and give an in-depth insight of the complete “BDStockTrend Application”. By presenting the problem statement in detail, the purpose of this document is to collect, evaluate, and provide a deeper understanding of the whole "BDStockTrend" application. Nevertheless, it also concentrates on the capabilities required by stakeholders and their needs. The detailed requirements of the “BDStockTrend” are provided in this document.
-
-1.1 Problem Statement 
-There is a lack of mobile applications that help investors to have forecast about the stock trends of Bangladeshi companies. The nature of stock prices can lead any investors in enormous loss for wrong or immature prediction of stock trends.
-
-Therefore, a mobile application with reasonably accurate forecasting ability using state-of-the-art artificial intelligence technologies is about time. Bangladeshi investors rely on heuristic techniques for stock market predictions, aiming for risk-free profits. However, the volatile nature of stock prices can lead to significant losses due to inaccurate predictions. This motivates to develop a mobile application with reasonably accurate forecasting ability using state-of-the-art artificial intelligence technologies.
-
-1.2 Purpose
-The purpose of this document is to collect and analyze all assorted ideas that have come up to define the system and all the various ideas that have emerged in order to develop the program. Also, to get a better idea of ??the project, describe the ideas that may be developed later, and write down ideas that are being considered but which can be eliminated as the system progresses, we will predict and plan how we expect this plan to be implemented.
-In short, the purpose of this SRS document is to provide a comprehensive overview of our software product, including its specifications and objectives. This document describes the user interface, hardware, and software requirements, as well as the project's target audience. Specifies how the system and its functions are viewed by administrators, teachers, and students. However, it assists any designer or developer in software delivery processes (SDLC).
-
-1.3 Project Scope
-The documentation of a project's scope is called a scope statement or terms of reference. This project traverses a lot of areas ranging from business concept to computing field and is required to perform several researches to be able to achieve the project objectives. The following are the scopes of work:
-
-A mobile application for stock traders of Bangladesh. In the application user will able to register and login to use the free service of the application. For premium service access they have to give payment information and verified. Free features are users will be able to see an information dashboard of Dhaka stock exchange and able to see all company lists that are supported by the application. Premium features include a detailed view of the company, historical data plot and the most important one is the stock forecasting. Other than that, the application must be user friendly, show information with live data, and feel good to use. The application must support in both android and ios mobile devices.
-
-1.4 Glossary
-This section provides definitions for all document names, acronyms, and abbreviations. The application domain's terms and concepts are defined.
-
-GUIGraphical User Interface  APIApplication Programming Interface  SRSSoftware Requirement Specification  UIUser Interface  SDLCSoftware Development Life CycleDBDatabaseSQLStructured Query LanguageRESTfulRepresentational State Transfer CIContinuous IntegrationCDContinuous Delivery/DeploymentHTMLHyper Text Markup Language
-1.5 References
-IEEE. IEEE Std 830-1998 IEEE Recommended Practice for Software Requirements Specifications. IEEE Computer Society, 1998.
-
-2. Stakeholders and Characteristics
-2.1 Premium App User
-Stakeholder: Individual investors and active traders in Bangladesh interested in in-depth DSE analysis.
-
-Characteristics:
-? Tech-savvy and comfortable using mobile apps for financial activities.
-? Values detailed company information, historical data analysis, and stock forecasting for informed investment decisions.
-? Willing to pay for premium features to gain a competitive edge in the market.
-? Expects high accuracy and reliability from stock predictions.
-2.2 Free App User
-Stakeholder: Individuals interested in staying informed about the DSE but may not require advanced features.
-Characteristics:
-? May be new to stock trading or have a lower level of investment activity.
-? Values a user-friendly app to stay updated on market trends and basic company information.
-? Might be interested in upgrading to premium features if they see value in the additional functionalities.
-? Data accuracy and live updates are important for informed decision-making.
-2.3 External API User
-Stakeholder: Financial institutions, investment platforms, or data analysis services.
-Characteristics:
-? Requires programmatic access to DSE historical and prediction data from BDStockTrend.
-? Values reliable data feeds for integration into their own services or applications.
-? Interested in secure and well-documented APIs for seamless data access.
-? May have specific data format requirements for integration purposes.
-2.4 Developer 
-To be classified as stakeholders, persons who have a legitimate interest in the product or project must have legitimate interests. Because the developers have too much at stake, they are deemed stakeholders because they have a legitimate interest. As stakeholders, developers are responsible for software delivery and estimation on time.
-
-3. Design and Implementation Constraints
-We have employed design and implementation constraints to ensure the success of this project. It also refers to a tool that allows developers and testers to inspect and interact with the application's user interface.
-3.1 Mobile Application Development
-Development Framework: The mobile application has been developed using Flutter, facilitating a cross-platform solution that supports both Android and iOS devices. This choice ensures a unified codebase, which simplifies maintenance and updates.
-Forecasting Capability: The application provides forecasts for over 400 plus companies in Bangladesh, leveraging the state-of-the-art models. This feature is a key value proposition for premium service subscribers.
-
-3.2 Backend Application Development
-Technology Stack: The system must utilize a microservices architecture, implemented with technologies that ensure scalability and modular development.
-Main Services: A microservice responsible for providing APIs to the mobile application. It also manages scheduled tasks that trigger the data crawling process from the Dhaka Stock Exchange (DSE) and the training/fitting processes for predictive models.
-Separate Services for Train/fit: A separate microservice that dedicated to the regular training and updating data of over 400 plus companies. These microservice forecast stock prices for various companies listed on the DSE using the latest market data obtained through scheduled web crawling.
-3.3 Performance and Scalability
-Handling Computational Load: The architecture must support the computational demands of training over 400 plus models regularly without impacting the performance of the mobile application or the responsiveness of the user interface.
-Scalability of Services: Services must be scalable to handle increases in user demand and data volume as the application grows in popularity and scope.
-
-3.4 Security and Compliance
-Data Security: Ensuring the security of user data, especially payment information for premium services, is paramount. The system must incorporate robust encryption methods and comply with local data protection regulations.
-API Security: APIs provided by the microservices need to implement secure access protocols to prevent unauthorized data access and ensure data integrity.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-4. Requirement Specification
-All the requirements based on the elicitation process are described in this section.
-4.1 Functional Requirement
-Functional requirements are those requirements that are used to illustrate the internal working nature of the system, the description of the system, and explanation of each subsystem. It consists of what task the system should perform, the processes involved, which data the system should hold and the interfaces with the user. 
-
-4.1.1 User login and register
-
-FR-1User Registration and Login to a registered account.DescriptionUsers should be able to register for an account using their email address and a secure password.
-Login functionality should be secure and allow users to access their accounts.StakeholdersPremium App User, Free App UserPriorityHigh
-4.1.2 Dashboard
-
-FR-2Information dashboardDescriptionUsers should be able to view a real-time information dashboard of the DSE.
-The dashboard should display key market indices, gainers and losers, and top traded stocks.StakeholdersPremium App User, Free App UserPriorityMedium
-4.1.3 Listed companies
-
-FR-3Listed companies viewDescriptionUsers should be able to browse a comprehensive list of all companies listed on the DSE supported by the application.StakeholdersPremium App User, Free App UserPriorityHigh
-4.1.4 Detailed information about individual company
-
-FR-4Detailed information about individual company viewDescriptionUsers with a premium subscription should be able to view detailed information about individual companies, including company profiles, financials, and news.StakeholdersPremium App UserPriorityMedium
-
-
-
-4.1.5 Historical data plots
-
-FR-5Historical data plots for premium userDescriptionPremium users should be able to access historical data plots for stocks, allowing them to analyze past trends.StakeholdersPremium App UserPriorityMedium
-4.1.6 Stock forecasting
-
-FR-6Stock forecasting for premium userDescriptionThe most important premium feature is stock forecasting. This feature should provide users with algorithmic predictions for future stock prices.StakeholdersPremium App UserPriorityMedium
-
-
-
-
-4.1.7  Paid external APIs
-
-FR-7Service APIs for external usersDescriptionThe BDStockTrend system should offer paid APIs for external services to access company historical data and prediction data.StakeholdersExternal API UserPriorityMedium
-4.2 Data Requirement
-4.2.1 Live data and regular data update
-
-DR-1Display live data from the DSE by regular updateDescriptionThe application should display live data from the DSE whenever possible.
-Historical data used for stock analysis and forecasting should be regularly updated.StakeholdersPremium App User, Free App User, External API UserPriorityMedium
-
-
-
-
-
-
-4.2.2 Protect user data
-
-DR-2Ensure user data protection and privacyDescriptionSecurity measures should be implemented to protect user data and ensure data privacy.StakeholdersPremium App User, Free App User, External API UserPriorityMedium
-4.3  Performance Requirement
-It is important to maintain the performance of the software system. To ensure performance we maintain these steps: 
-
-4.3.1 Higher speed and low latency
-
-PR-1Application should be with less buffering and load faster.DescriptionApplication should be with less buffering and load faster, which will increase application usability.StakeholdersPremium App User, Free App UserPriorityHigh
-
-
-4.3.2 Capacity Requirements
-The application must support the computational demands of training over 400 plus models regularly without impacting the performance of the mobile application or the responsiveness of the user interface.
-
-4.3.3 Scalability of Services
-All application services must be scalable to handle increases in user demand and data volume as the application grows in popularity and scope.
-
-4.4 Maintainability and Supportability
-4.4.1 Maintenance Requirements
-MR-1Make the code maintainable.DescriptionCode must be developed so that it can be modified later and will be readable.StakeholdersDevelopersPriorityHigh
-4.4.2 Supportability Requirements
-The application should be compatible with the latest versions of Android and iOS operating systems.
-The application should function seamlessly on a variety of mobile devices with different screen sizes and resolutions.
-
-
-
-
-5. Requirement Engineering Process
-Requirements Engineering (RE) determines software requirements according to customer requirements or needs. Requirements engineering process includes requirements elicitation, needs modeling, requirements analysis, requirements assurance & validation, and requirements management.
-5.1 Requirement Elicitation Techniques
-Requirements elicitation is the practice of researching and finding system requirements for users, customers, and other stakeholders also referred to as "requirement gathering". Requirement elicitation can be done by contacting participants directly or by doing some research, analysis, and testing.
-5.1.1 Hold Interviews
-We hold discussions that can be held individually or with a small group of participants. They are an effective way to access services without spending a lot of time with participants because we meet with people to discuss only certain important requirements of this program. Negotiations are useful for obtaining individual requirements for members in organizing workshops where those members of the program come together to resolve any issues or conflicts. We mainly perform our interviews based on some specific criteria.
-5.1.2 Perform Document Analysis
-Existing documentation can help to show how systems are currently operating or what they are what I should do. Documents include written information about current programs, business processes, needs specifications, and competitor research. Review once textual analysis can help determine which performance should remain and functionality that isn’t in use. After the existing document
-5.1.3 System Interface Analysis
-The first thing to do is to identify which systems the system-to-be shall communicate with. It could be a server on the Internet, a piece of software on the same host as the system-to-be, some hardware, or something completely different.
-5.1.4 Distribute Questionnaires
-The questionnaire is a useful way to investigate styles, changes in attitudes and users' ideas, and user satisfaction with priorities and preferences. Our lists of questions were as short as possible. The respondent may be tired or frustrated. Had a basic reason for all the questions as well as group the topic areas together for the respondent to focus on. The main advantage of this survey responses was that they were collected in the usual way. Information was summarized by a large number of people.
-5.2 Requirement Validation
-Requirement validation ensures that the requirements are correct and reflect the quality you want from this program. In the beginning, our requirements looked good but when we read them and tried to work with them, they came out having ambiguities and gaps.
-5.2.1 Review the Requirements
-Negative peer review, especially the type of rigorous review called evaluation, is unique among the highest quality software processes available. We had a team of reviewers representing different perspectives and carefully examined written needs, analysis models, and related information on disability.
-5.2.2 Test the Requirements
-The test creates another view of the requirements. We also performed writing tests regarding assurance of whether the expected performance was found or not. Getting tested by the user needs to document the expected product behavior under specified conditions.
-5.2.3 Simulate the requirements
-To stimulate requirements, trading tools are available that we have used to simulate a proposed system in place or to add details of written requirements. The simulation takes prototyping to the next level.
-
-
-
-
-
-
-
-
-
-
-6. Use Case Diagram
-
-
-
-Figure 1: Use Case Diagram
-
-
-
-
-7. Use Case Description
-
-7.1 Use Case - Register
-Use CaseRegisterGoal
-Allow a new user to create a BDStockTrend account.Preconditions
-User is not logged into the application.
-User has a valid email address that has not been used to create an account previously.Success End Condition
-The user is logged into the application.Failed End Condition
-User cancels the registration process and any of the alternative flows occur (password mismatch, duplicate email, system error).Actors:
-Free App User, Premium App UserTrigger
-User selects the "Register" option upon launching the app.Main Success Flows
-StepAction1User enters their email address and a secure password and password confirmation.2User enters additional information such as name or phone number.3User submits the registration form.4The system validates the user information and checks for existing accounts with the same email address.5Upon successful registration, the system logs the user in and directs them to the DSE dashboard.Alternative Flows
-StepBranching Action1aIf the password confirmation does not match, the system prompts the user to re-enter the password.3aIf the email address is already registered, the system prompts the user to enter a different email or choose "Forgot Password" to recover their account.4aIf there is a system error during registration, the user is notified and advised to try again later.Quality RequirementsStepRequirement1The system should provide clear error messages and instructions during registration.3The registration process should be secure and protect user information.Table 1: Register
-7.2 Use Case - Login
-Use CaseLoginGoal
-Allow a registered user to access their BDStockTrend account.Preconditions
-User has a registered BDStockTrend account.Success End Condition
-The user is logged into their BDStockTrend account.Failed End Condition
-User cancels the login process or the user exceeds the maximum number of login attempts with incorrect credentials.Actors:
-Free App User, Premium App UserTrigger
-User enters their email address and password on the login screen and clicks the login button.Main Success Flows
-StepAction1User enters their registered email address and password.2The system validates the user credentials against the account information.3Upon successful login, the system directs the user to the DSE dashboard.Alternative Flows
-StepBranching Action1aIf the email address or password is incorrect, the system prompts the user to re-enter their credentials. (with a limited number of attempts to prevent brute force attacks)3aIf there is a system error during login, the user is notified and advised to try again later.Quality RequirementsStepRequirement1The login process should be secure and employ strong password hashing techniques.3aLogin attempts should be limited to prevent brute force attacks.3bThe system should provide clear error messages and instructions during login.Table 2: Login
-
-
-
-
-
-
-7.3 Use Case - View DSE Dashboard
-Use CaseView DSE DashboardGoal
-Allow users to view a real-time information dashboard of the Dhaka Stock Exchange.Preconditions
-The user is logged into the application.Success End Condition
-The user is presented with a comprehensive overview of the current state of the DSE.Failed End Condition
-The system is unable to retrieve DSE data after multiple attempts.Actors:Free App User, Premium App UserTrigger
-User navigates to the "Dashboard" section of the application.Main Success Flows
-StepAction1The system displays key market indices, including the DSE Broad Index, sectoral indices, and market capitalization.2The dashboard shows gainers and losers among listed companies.3The user can view the most actively traded stocks on the exchange.Alternative Flows
-StepBranching Action1 If there is a delay in receiving live data, the system displays an error message and attempts to refresh the data.Quality RequirementsStepRequirement1The DSE dashboard should display real-time or near realTable 3: View DSE Dashboard
-
-
-
-
-
-
-
-
-
-
-
-7.4 Use Case - Browse Company List
-Use CaseBrowse Company ListGoal
-Allow users to explore a list of companies listed on the DSE supported by the application.Preconditions
- The user is logged into the application.Success End Condition
-The user has access to a searchable and filterable list of companies listed on the DSE.Failed End Condition
-The system is unable to retrieve company list data after multiple attempts.Actors:
-Free App User, Premium App UserTrigger
-User navigates to the "Company List" section of the application.Main Success Flows
-StepAction1The system displays a searchable list of companies with basic information such as company name, ticker symbol, and sector.2The user can search for companies by name or filter the list by sector.Alternative Flows
-StepBranching Action1The system is unable to retrieve company list data after multiple attempts.Quality RequirementsStepRequirement1The search and filter functionalities should be efficient and user-friendly.Table 4: Browse Company List
-
-
-
-
-
-
-
-
-
-
-7.5 Use Case - View Company Details
-Use CaseView Company DetailsGoal
-Allow users to explore a list of companies listed on the DSE supported by the application.Preconditions
-The user is logged into the application with a premium subscription and company data is available for the selected company.Success End Condition
-The user is presented with a comprehensive view of the selected company's information.Failed End Condition
-The system is unable to retrieve company details data after multiple attempts.Actors:
-Premium App UserTrigger
-User navigates to the "Company List" section of the application.Main Success Flows
-StepAction1The system displays a searchable list of companies with basic information such as company name, ticker symbol, and sector.2The user can search for companies by name or filter the list by sector.Alternative Flows
-StepBranching Action1The system is unable to retrieve company list data after multiple attempts.Quality RequirementsStepRequirement1The search and filter functionalities should be efficient and user-friendly.Table 5: View Company Details
-
-
-
-
-
-
-7.6 Use Case - View Historical Data Plots
-Use CaseView Historical Data PlotsGoal
-Allow premium users to view historical data plots for a specific company's stock price.Preconditions
-The user is logged into the application with a premium subscription.Success End Condition
-The user is able to view and analyze historical stock price data for the chosen company.Failed End Condition
-The system is unable to retrieve historical data after multiple attempts.Actors:
-Premium App UserTrigger
-User selects the "Historical Data" option within the company details page.Main Success Flows
-StepAction1The system displays historical data plots for the selected company's stock price over a user-defined timeframe.2The user can zoom in and out of the charts to view specific data points.3The user may be able to overlay additional indicators on the charts for further analysisAlternative Flows
-StepBranching Action1If historical data for the selected company is unavailable, the system displays an error message and suggests alternative companies with available data.Quality RequirementsStepRequirement1The data displayed should be accurate and reliable.2Historical data plots should be clear, concise, and visually appealing.Table 6: View Historical Data Plots
-
-7.7 Use Case - Get Stock Forecast
-Use CaseGet Stock ForecastGoal
-Allow premium users to access algorithmic predictions for the future stock price of a specific company.Preconditions
-The user is logged into the application with a premium subscription.Success End Condition
-The user is presented with a clear and informative stock forecast for the chosen company, along with a disclaimer about the limitations and risks.Failed End Condition
-The system cannot generate a stock forecast for the chosen company due to unavailable data or other reasons.Actors:
-Premium App UserTrigger
-User selects the "Stock Forecast" option within the company details page.Main Success Flows
-StepAction1The system displays an algorithmic prediction for the future stock price of the selected company, including a forecast range and potential confidence level (clearly stating that these are predictions and not guarantees).2Users are informed about the limitations and inherent risks associated with stock market predictions.Alternative Flows
-StepBranching Action1If a stock forecast cannot be generated for the selected company, the system explains the reason (e.g., insufficient data) and suggests alternative companiesQuality RequirementsStepRequirement1Plots should be clear, concise, and visually appealing.Table 7: Get Stock Forecast
-
-
-
-7.8 Use Case - Access Company Historical Data (API User)
-Use CaseAccess Company Historical Data (API User)Goal
-Allow authorized external API users to access historical data for companies listed on the DSE.Preconditions
-The API user has a valid API key and credentials for accessing the BDStockTrend API.
-Historical data is available for the requested company.Success End Condition
-The API user receives the requested historical data for the company in the defined format.Failed End Condition
-The API request fails due to invalid credentials.
-Historical data is unavailable for the requested company.
-Rate limits are exceeded.
-System error occurs during data retrieval or transmission.Actors:
-API UserTrigger
-The API user sends an authorized API request to the BDStockTrend system.Main Success Flows
-StepAction1The API user sends a request specifying the company ID or ticker symbol for the historical data they require.2The BDStockTrend system authenticates the API request and validates the user's credentials.3Upon successful authentication, the system retrieves the requested historical data for the company in a predefined format (e.g., JSON, CSV).4The system transmits the historical data to the API user's application.Alternative Flows
-StepBranching Action1If the API key or credentials are invalid, the system returns an error message to the API user.2If historical data for the requested company is unavailable, the system returns an appropriate error code or message.3The system may implement rate limiting to prevent excessive API requests and ensure fair access for all users.Quality RequirementsStepRequirement1The BDStockTrend API should be well-documented and easy to integrate with external applications.2The API should provide secure and reliable access to historical data.3The data format should be consistent and well-defined.Table 8: Access Company Historical Data (API User)
-
-7.9 Use Case - Access Stock Prediction Data (API User)
-Use CaseAccess Stock Prediction Data (API User)Goal
-Allow authorized external API users to access prediction data for companies listed on the DSE.Preconditions
-The API user has a valid API key and credentials for accessing the BDStockTrend API.
-Historical data is available for the requested company.Success End Condition
-The API user receives the requested stock prediction data for the company in the defined format.Failed End Condition
-The API request fails due to invalid credentials.
-Historical data is unavailable for the requested company.
-Rate limits are exceeded.
-System error occurs during data retrieval or transmission.Actors:
-API UserTrigger
-The API user sends an authorized API request to the BDStockTrend system.Main Success Flows
-StepAction1The API user sends a request specifying the company ID or ticker symbol for the stock prediction data they require.2The BDStockTrend system authenticates the API request and validates the user's credentials.3Upon successful authentication, the system retrieves the requested prediction data for the company in a predefined format (e.g., JSON, CSV).4The system transmits the prediction data to the API user's application.Alternative Flows
-StepBranching Action1If the API key or credentials are invalid, the system returns an error message to the API user.2If stock prediction data for the requested company is unavailable, the system returns an appropriate error code or message.3The system may implement rate limiting to prevent excessive API requests and ensure fair access for all users.Quality RequirementsStepRequirement1The API should provide access to the latest available stock prediction data.2The data format should be consistent and well-defined.Table 9: Access Stock Prediction Data (API User)
-8. Activity Diagram
-
-8.1 Use Case - Register
-
-
-
-Figure 2: Activity Diagram of Register
-
-
-
-
-
-
-
-
-
-
-8.2 Use Case - Login
-
-
-Figure 3: Activity Diagram of Login
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-8.3 Use Case - View DSE Dashboard
-
-
-
-
-Figure 4: Activity Diagram of View DSE Dashboard
-
-
-
-
-
-
-
-
-
-
-
-8.4 Use Case - Browse Company List
-
-
-
-
-Figure 5: Activity Diagram of Browse Company List
-
-
-
-
-
-
-
-
-
-
-
-
-
-8.5 Use Case - View Company Details
-
-
-Figure 6: Activity Diagram of View Company Details
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-8.6 Use Case - View Historical Data Plots
-
-
-
-
-Figure 7: Activity Diagram of View Historical Data Plots
-
-
-
-
-
-
-
-
-
-
-
-
-
-8.7 Use Case - Get Stock Forecast
-
-
-Figure 8: Activity Diagram of Get Stock Forecast
-
-
-
-
-
-
-
-
-
-
-
-
-8.8 Use Case - Access Company Historical Data (API User)
-
-
-
-
-Figure 9: Activity Diagram of Access Company Historical Data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-8.9 Use Case - Access Stock Prediction Data (API User)
-
-
-
-
-Figure 10: Activity Diagram of Access Stock Prediction Data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-9. Appendix
-9.1 Prioritization of requirements 
-We’ve prioritized the functional requirements by following Three-level Scale technique. 
-9.1.1 Three-level Scale 
-When a Business Analyst categorizes the requirements in any of the ordering or ranking scale, it is subject to the analyst’s understanding of the business. Many analysts suggest that this method has some drawbacks and advocate methods that have more than one scale. 
-9.1.2 Prioritization of the requirements of BDStockTrend
-FR-1 - High - Users should be able to register for an account using their email address and a secure password. Login functionality should be secure and allow users to access their accounts
-
-FR-2 - Medium - Users should be able to view a real-time information dashboard of the DSE. The dashboard should display key market indices, gainers and losers, and top traded stocks.
-
-FR-3 - High - Users should be able to browse a comprehensive list of all companies listed on the DSE supported by the application.
-
-FR-4 - Medium - Users with a premium subscription should be able to view detailed information about individual companies, including company profiles, financials, and news.
-
-FR-5 - Medium - Premium users should be able to access historical data plots for stocks, allowing them to analyze past trends.
-
-FR-6 - Medium - The most important premium feature is stock forecasting. This feature should provide users with algorithmic predictions for future stock prices.
-
-FR-7 - Medium - The BDStockTrend system should offer paid APIs for external services to access company historical data and prediction data.
-
-DR-1 - Medium - The application should display live data from the DSE whenever possible. Historical data used for stock analysis and forecasting should be regularly updated.
-
-DR-2 - Medium - Security measures should be implemented to protect user data and ensure data privacy.
-
-PR-1 - High - Application should be with less buffering and load faster, which will increase application usability.
-
-PR-2 - Medium - The application must support the computational demands of training over 400 plus models regularly without impacting the performance of the mobile application or the responsiveness of the user interface.
-
-PR-3 - Medium - All application services must be scalable to handle increases in user demand and data volume as the application grows in popularity and scope.
-
-MR-1 - High - Code must be developed so that it can be modified later and will be readable.
-
-CR-1 - Medium - The application should be compatible with the latest versions of Android and iOS operating systems.
-
-
-
-
-
-
-
-
-
-2
-
-	
-
