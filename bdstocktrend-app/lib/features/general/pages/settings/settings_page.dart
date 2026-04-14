@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/features/features.dart';
 import 'package:bd_stock_trend/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> with MainBoxMixin {
                       DropDown<ActiveTheme>(
                         key: const Key("dropdown_theme"),
                         hint: Strings.of(context)!.chooseTheme,
-                        value: state.activeTheme ?? ActiveTheme.system,
+                        value: state.activeTheme,
                         prefixIcon: const Icon(Icons.light),
                         items: ActiveTheme.values
                             .map(

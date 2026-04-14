@@ -88,10 +88,14 @@ class _LineChartSample4State extends State<LineChartSample4> {
       );
     }).toList();
 
-    print('[CHART_DEBUG] Historical data (data1): ${widget.data1.length} points, range: ${widget.data1.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data1.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
-    print('[CHART_DEBUG] Forecast data (data2): ${widget.data2.length} points, range: ${widget.data2.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data2.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
-    print('[CHART_DEBUG] data1 values: ${widget.data1.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
-    print('[CHART_DEBUG] data2 values: ${widget.data2.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
+    print(
+        '[CHART_DEBUG] Historical data (data1): ${widget.data1.length} points, range: ${widget.data1.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data1.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
+    print(
+        '[CHART_DEBUG] Forecast data (data2): ${widget.data2.length} points, range: ${widget.data2.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data2.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
+    print(
+        '[CHART_DEBUG] data1 values: ${widget.data1.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
+    print(
+        '[CHART_DEBUG] data2 values: ${widget.data2.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
 
     _values2.insert(0, _values1.last);
 
@@ -224,7 +228,38 @@ class _LineChartSample4State extends State<LineChartSample4> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       lineTouchData: LineTouchData(
+        touchSpotThreshold: 30,
+        getTouchedSpotIndicator:
+            (LineChartBarData barData, List<int> spotIndexes) {
+          final strokeColor = (barData.gradient?.colors.isNotEmpty ?? false)
+              ? barData.gradient!.colors.last
+              : Colors.white;
+
+          return spotIndexes.map((index) {
+            return TouchedSpotIndicatorData(
+              const FlLine(
+                color: Colors.white24,
+                strokeWidth: 1,
+              ),
+              FlDotData(
+                show: true,
+                getDotPainter: (spot, percent, bar, spotIndex) {
+                  return FlDotCirclePainter(
+                    radius: 3,
+                    color: Colors.white,
+                    strokeWidth: 2,
+                    strokeColor: strokeColor,
+                  );
+                },
+              ),
+            );
+          }).toList();
+        },
         touchTooltipData: LineTouchTooltipData(
+          fitInsideHorizontally: true,
+          fitInsideVertically: true,
+          tooltipPadding: const EdgeInsets.all(8),
+          tooltipMargin: 8,
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
             return touchedSpots.map((LineBarSpot touchedSpot) {
               final time = DateTime.fromMillisecondsSinceEpoch(

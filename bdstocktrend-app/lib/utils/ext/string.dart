@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
 extension StringExtension on String {
@@ -28,7 +28,7 @@ extension StringExtension on String {
         position: ToastPosition.top,
         duration: const Duration(seconds: 3),
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       //FirebaseCrashLogger().nonFatalError(error: e, stackTrace: stackTrace);
       log.e("error $e");
     }
@@ -53,7 +53,7 @@ extension StringExtension on String {
         position: ToastPosition.top,
         duration: const Duration(seconds: 3),
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       //FirebaseCrashLogger().nonFatalError(error: e, stackTrace: stackTrace);
       log.e("$e");
     }
@@ -76,7 +76,7 @@ extension StringExtension on String {
         position: ToastPosition.top,
         duration: const Duration(seconds: 3),
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       //FirebaseCrashLogger().nonFatalError(error: e, stackTrace: stackTrace);
       log.e("$e");
     }

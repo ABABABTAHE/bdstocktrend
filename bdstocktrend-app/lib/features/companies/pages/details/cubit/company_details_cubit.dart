@@ -1,8 +1,6 @@
 import 'package:bd_stock_trend/core/core.dart';
-import 'package:bd_stock_trend/features/companies/companies.dart';
 import 'package:bd_stock_trend/features/companies/domain/entities/company_details.dart';
 import 'package:bd_stock_trend/features/companies/domain/usecases/get_company_details.dart';
-import 'package:bd_stock_trend/features/features.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

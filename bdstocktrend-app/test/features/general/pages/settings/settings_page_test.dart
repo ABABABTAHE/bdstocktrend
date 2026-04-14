@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
 import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/dependencies_injection.dart';
 import 'package:bd_stock_trend/features/features.dart';
 import 'package:bd_stock_trend/utils/utils.dart';
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

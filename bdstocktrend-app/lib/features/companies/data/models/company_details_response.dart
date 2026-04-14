@@ -1,6 +1,5 @@
 import 'package:bd_stock_trend/common/model/time_series.dart';
 import 'package:bd_stock_trend/features/companies/domain/entities/company_details.dart';
-import 'package:bd_stock_trend/features/dashboard/domain/entities/dashboard.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'company_details_response.freezed.dart';

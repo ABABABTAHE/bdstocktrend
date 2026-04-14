@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/dependencies_injection.dart';
 import 'package:bd_stock_trend/features/features.dart';
 import 'package:bd_stock_trend/utils/helper/helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,8 +52,7 @@ class BDStockTrend extends StatelessWidget {
 
                   return MediaQuery(
                     data: data.copyWith(
-                      textScaleFactor: 1,
-                      alwaysUse24HourFormat: true,
+                      alwaysUse24HourFormat: true, textScaler: TextScaler.noScaling,
                     ),
                     child: child!,
                   );
@@ -63,7 +62,7 @@ class BDStockTrend extends StatelessWidget {
                 darkTheme: themeDark(context),
                 locale: Locale(data.type ?? "en"),
                 supportedLocales: L10n.all,
-                themeMode: data.activeTheme?.mode ?? ThemeMode.system,
+                themeMode: data.activeTheme.mode,
               ),
             );
           },

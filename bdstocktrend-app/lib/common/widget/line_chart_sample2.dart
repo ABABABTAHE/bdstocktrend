@@ -185,7 +185,34 @@ class _LineChartSample2State extends State<LineChartSample2> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       lineTouchData: LineTouchData(
+        touchSpotThreshold: 30,
+        getTouchedSpotIndicator:
+            (LineChartBarData barData, List<int> spotIndexes) {
+          return spotIndexes.map((index) {
+            return TouchedSpotIndicatorData(
+              const FlLine(
+                color: Colors.white24,
+                strokeWidth: 1,
+              ),
+              FlDotData(
+                show: true,
+                getDotPainter: (spot, percent, bar, spotIndex) {
+                  return FlDotCirclePainter(
+                    radius: 3,
+                    color: Colors.white,
+                    strokeWidth: 2,
+                    strokeColor: gradientColors.last,
+                  );
+                },
+              ),
+            );
+          }).toList();
+        },
         touchTooltipData: LineTouchTooltipData(
+          fitInsideHorizontally: true,
+          fitInsideVertically: true,
+          tooltipPadding: const EdgeInsets.all(8),
+          tooltipMargin: 8,
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
             return touchedSpots.map((LineBarSpot touchedSpot) {
               final time = DateTime.fromMillisecondsSinceEpoch(
@@ -193,7 +220,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
               );
               final value = touchedSpot.y;
               return LineTooltipItem(
-                '${DateFormat('EEE MMM dd, hh:mm').format(time)}\nIndex: ${value.toStringAsFixed(4)}',
+                '${DateFormat('EEE MMM dd, hh:mm').format(time)}\nPrice: ${value.toStringAsFixed(4)}',
                 const TextStyle(color: Colors.white),
               );
             }).toList();

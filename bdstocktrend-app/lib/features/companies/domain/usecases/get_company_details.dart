@@ -1,5 +1,4 @@
 import 'package:bd_stock_trend/core/core.dart';
-import 'package:bd_stock_trend/features/companies/domain/entities/companies.dart';
 import 'package:bd_stock_trend/features/companies/domain/entities/company_details.dart';
 import 'package:bd_stock_trend/features/companies/domain/repositories/companies_repository.dart';
 import 'package:dartz/dartz.dart';

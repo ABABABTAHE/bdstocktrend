@@ -1,6 +1,6 @@
+import 'package:bd_stock_trend/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bd_stock_trend/core/core.dart';
 
 /// Light theme
 ThemeData themeLight(BuildContext context) => ThemeData(

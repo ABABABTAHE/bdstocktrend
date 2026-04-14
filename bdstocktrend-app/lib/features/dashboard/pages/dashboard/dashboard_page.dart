@@ -21,8 +21,6 @@ class _DashboardPageState extends State<DashboardPage>
   late TabController _tabController1;
   late TabController _tabController2;
   final ScrollController _scrollController = ScrollController();
-  int _currentPage = 1;
-  int _lastPage = 1;
 
   @override
   void initState() {
@@ -57,8 +55,6 @@ class _DashboardPageState extends State<DashboardPage>
         color: Theme.of(context).extension<LzyctColors>()!.pink,
         backgroundColor: Theme.of(context).extension<LzyctColors>()!.background,
         onRefresh: () {
-          _currentPage = 1;
-          _lastPage = 1;
 
           return context.read<DashboardCubit>().refreshDashboardData();
         },

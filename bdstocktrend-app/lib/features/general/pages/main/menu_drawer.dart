@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/utils/utils.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class MenuDrawer extends StatefulWidget {
@@ -32,7 +32,7 @@ class _MenuDrawerState extends State<MenuDrawer> with MainBoxMixin {
             child: ListView(
               padding: EdgeInsets.symmetric(horizontal: Dimens.space16),
               children: widget.dataMenu.map<Widget>((menu) {
-                final isSelected = menu.isSelected ?? false;
+                final isSelected = menu.isSelected;
                 return Container(
                   margin: EdgeInsets.only(bottom: Dimens.space8),
                   decoration: BoxDecoration(

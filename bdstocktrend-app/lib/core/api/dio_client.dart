@@ -1,9 +1,9 @@
 // ignore_for_file: unused_catch_stack
 
-import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/utils/utils.dart';
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 typedef ResponseConverter<T> = T Function(dynamic response);
@@ -11,7 +11,6 @@ typedef ResponseConverter<T> = T Function(dynamic response);
 class DioClient with MainBoxMixin {
   String baseUrl = const String.fromEnvironment("BASE_URL");
 
-  String? _auth;
   bool _isUnitTest = false;
   late Dio _dio;
 
@@ -28,7 +27,6 @@ class DioClient with MainBoxMixin {
     }
 
     try {
-      _auth = getData(MainBoxKeys.token);
     } catch (_) {}
 
     _dio = _createDio();
@@ -43,7 +41,6 @@ class DioClient with MainBoxMixin {
     } else {
       /// We need to recreate dio to avoid token issue after login
       try {
-        _auth = getData(MainBoxKeys.token);
       } catch (_) {}
 
       final dio = _createDio();

@@ -243,22 +243,13 @@ class _SSLCommerzScreenState extends State<SSLCommerzScreen> {
   }
 
   void _displayPaymentStatus(SSLCTransactionInfoModel result) {
-    String message;
-    Color bgColor;
 
     switch (result.status?.toLowerCase()) {
       case "failed":
-        message = "Transaction Failed";
-        bgColor = Colors.red;
         break;
       case "closed":
-        message = "SDK Closed by User";
-        bgColor = Colors.orange;
         break;
       default:
-        message =
-            "Transaction ${result.status} - Amount: ${result.amount ?? 0}";
-        bgColor = Colors.green;
     }
 
     // Fluttertoast.showToast(

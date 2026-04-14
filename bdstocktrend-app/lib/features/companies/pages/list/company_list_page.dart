@@ -3,12 +3,10 @@ import 'package:bd_stock_trend/features/features.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/app_route.dart';
 
 class CompanyListPage extends StatefulWidget {
   const CompanyListPage({super.key});
@@ -18,11 +16,9 @@ class CompanyListPage extends StatefulWidget {
 }
 
 class _CompanyListState extends State<CompanyListPage> {
-  final ScrollController _scrollController = ScrollController();
-  int _currentPage = 1;
-  int _lastPage = 1;
+  final int _currentPage = 1;
   List<Company> _companies = [];
-  List<Company> _filteredItems = [];
+  final List<Company> _filteredItems = [];
   String noLogo =
       "https://image.spreadshirtmedia.net/image-server/v1/products/T1459A839PA4459PT28D11017255W10000H5096/views/1,width=550,height=550,appearanceId=839,backgroundColor=F2F2F2/no-logo-sticker.jpg";
 
