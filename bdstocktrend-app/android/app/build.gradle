@@ -26,6 +26,7 @@ if (flutterVersionName == null) {
 android {
     namespace "iit.nstu.bdstocktrend"
     compileSdk 36
+    ndkVersion "30.0.14904198"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

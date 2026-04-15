@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:bd_stock_trend/core/core.dart';
+import 'package:flutter/material.dart';
 
 
 class ButtonNotification extends StatelessWidget {

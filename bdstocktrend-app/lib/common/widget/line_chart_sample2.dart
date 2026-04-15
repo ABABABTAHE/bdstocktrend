@@ -1,8 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:bd_stock_trend/common/model/time_series.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:math' as math;
 
 class LineChartSample2 extends StatefulWidget {
   final List<TimeSeries> data;

@@ -2,14 +2,14 @@ import 'package:bd_stock_trend/dependencies_injection.dart';
 import 'package:bd_stock_trend/features/auth/pages/payment.dart';
 import 'package:bd_stock_trend/features/companies/pages/details/company_details_page.dart';
 import 'package:bd_stock_trend/features/companies/pages/details/cubit/company_details_cubit.dart';
+import 'package:bd_stock_trend/features/dashboard/pages/dse/dhaka_stock_exchange_page.dart';
 import 'package:bd_stock_trend/features/features.dart';
+import 'package:bd_stock_trend/features/settings/pages/change_password/change_password_page.dart';
+import 'package:bd_stock_trend/features/settings/pages/edit_profile/edit_profile_page.dart';
 import 'package:bd_stock_trend/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bd_stock_trend/features/dashboard/pages/dse/dhaka_stock_exchange_page.dart';
-import 'package:bd_stock_trend/features/settings/pages/change_password/change_password_page.dart';
-import 'package:bd_stock_trend/features/settings/pages/edit_profile/edit_profile_page.dart';
 import 'package:go_router/go_router.dart';
 
 enum Routes {

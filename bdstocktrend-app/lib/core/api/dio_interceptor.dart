@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:bd_stock_trend/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:bd_stock_trend/utils/utils.dart';
 
 class DioInterceptor extends Interceptor {
   @override

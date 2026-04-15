@@ -109,11 +109,11 @@ ThemeData themeLight(BuildContext context) => ThemeData(
         contentPadding: EdgeInsets.all(Dimens.space16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusMedium),
-          borderSide: BorderSide(color: Palette.divider),
+          borderSide: const BorderSide(color: Palette.divider),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusMedium),
-          borderSide: BorderSide(color: Palette.divider),
+          borderSide: const BorderSide(color: Palette.divider),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusMedium),
@@ -289,11 +289,11 @@ ThemeData themeDark(BuildContext context) => ThemeData(
         contentPadding: EdgeInsets.all(Dimens.space16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusMedium),
-          borderSide: BorderSide(color: Palette.dividerDark),
+          borderSide: const BorderSide(color: Palette.dividerDark),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusMedium),
-          borderSide: BorderSide(color: Palette.dividerDark),
+          borderSide: const BorderSide(color: Palette.dividerDark),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Dimens.radiusMedium),
