@@ -51,7 +51,8 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage>
 
   Widget _success(CompanyDetails data) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final chartHeight = (screenWidth / 1.70) + 140;
+    // Keep charts a bit more compact; users can pinch-zoom inside the chart.
+    final chartHeight = (screenWidth * 0.72).clamp(280.0, 420.0);
 
     return SingleChildScrollView(
       child: Padding(

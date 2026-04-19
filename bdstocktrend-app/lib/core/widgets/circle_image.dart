@@ -1,7 +1,6 @@
+import 'package:bd_stock_trend/core/core.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:bd_stock_trend/core/core.dart';
-
 
 class CircleImage extends StatelessWidget {
   final String url;
@@ -11,24 +10,43 @@ class CircleImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// TODO Need to change with Fix on error image url
+    final resolvedSize = size ?? Dimens.space46;
+    final trimmed = url.trim();
+
+    if (trimmed.isEmpty || trimmed.toLowerCase() == 'null') {
+      return _placeholder(resolvedSize);
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(360),
 
       /// 360 degree circle
       child: CachedNetworkImage(
         fit: BoxFit.cover,
-        width: size,
-        height: size,
+        width: resolvedSize,
+        height: resolvedSize,
         fadeInDuration: const Duration(milliseconds: 300),
-        imageUrl: url,
+        imageUrl: trimmed,
         placeholder: (context, url) => SizedBox(
-          width: Dimens.space46,
-          height: Dimens.space46,
+          width: resolvedSize,
+          height: resolvedSize,
           child: const Loading(showMessage: false),
         ),
-        // errorWidget: (context, url, error) =>
-        //     new SvgPicture.asset(Images.icEmpty),
+        errorWidget: (context, url, error) => _placeholder(resolvedSize),
+      ),
+    );
+  }
+
+  Widget _placeholder(double size) {
+    return Container(
+      width: size,
+      height: size,
+      color: Palette.background,
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.image_not_supported_rounded,
+        color: Palette.subText.withOpacity(0.5),
+        size: size * 0.5,
       ),
     );
   }

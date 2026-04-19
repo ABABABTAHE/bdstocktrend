@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-
 class CompanyListPage extends StatefulWidget {
   const CompanyListPage({super.key});
 
@@ -21,6 +20,31 @@ class _CompanyListState extends State<CompanyListPage> {
   final List<Company> _filteredItems = [];
   String noLogo =
       "https://image.spreadshirtmedia.net/image-server/v1/products/T1459A839PA4459PT28D11017255W10000H5096/views/1,width=550,height=550,appearanceId=839,backgroundColor=F2F2F2/no-logo-sticker.jpg";
+
+  String _apiBaseUrl() {
+    const envUrl = String.fromEnvironment('BASE_URL');
+    return envUrl.isNotEmpty ? envUrl : 'http://stockai.uerd.org';
+  }
+
+  String _resolveLogoUrl(Company company) {
+    final raw = (company.logo ?? '').trim();
+    if (raw.isNotEmpty && raw.toLowerCase() != 'null') {
+      if (raw.startsWith('http://') || raw.startsWith('https://')) {
+        return raw;
+      }
+      if (raw.startsWith('//')) {
+        return 'https:$raw';
+      }
+      final base = _apiBaseUrl();
+      if (raw.startsWith('/')) {
+        return '$base$raw';
+      }
+      return '$base/$raw';
+    }
+
+    final fallback = getDomain(company.website);
+    return fallback.isNotEmpty ? fallback : noLogo;
+  }
 
   @override
   void initState() {
@@ -132,7 +156,8 @@ class _CompanyListState extends State<CompanyListPage> {
                                                   BorderRadius.circular(
                                                       Dimens.radiusSmall),
                                               child: CachedNetworkImage(
-                                                imageUrl: company.logo ?? "",
+                                                imageUrl:
+                                                    _resolveLogoUrl(company),
                                                 fit: BoxFit.contain,
                                                 placeholder: (context, url) =>
                                                     const Center(
@@ -140,11 +165,37 @@ class _CompanyListState extends State<CompanyListPage> {
                                                       CupertinoActivityIndicator(),
                                                 ),
                                                 errorWidget:
-                                                    (context, url, error) =>
-                                                        Image.network(
-                                                  noLogo,
-                                                  fit: BoxFit.cover,
-                                                ),
+                                                    (context, url, error) {
+                                                  final clearbit = getDomain(
+                                                      company.website);
+                                                  if (clearbit.isNotEmpty &&
+                                                      url != clearbit) {
+                                                    return Image.network(
+                                                      clearbit,
+                                                      fit: BoxFit.contain,
+                                                      errorBuilder: (context,
+                                                              error,
+                                                              stackTrace) =>
+                                                          Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .image_not_supported_rounded,
+                                                          color: Palette.subText
+                                                              .withOpacity(0.5),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+
+                                                  return Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .image_not_supported_rounded,
+                                                      color: Palette.subText
+                                                          .withOpacity(0.5),
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             ),
                                           ),
@@ -225,24 +276,28 @@ class _CompanyListState extends State<CompanyListPage> {
   }
 
   String getDomain(String? website) {
-    final String domain = website ?? "";
+    final raw = (website ?? '').trim();
+    if (raw.isEmpty) return '';
 
-    final int dotIndex = domain.indexOf('.');
-
-    // Check if '.' exists in the string
-    if (dotIndex != -1) {
-      // Get the substring after the first '.' occurrence
-      String substringAfterDot = domain.substring(dotIndex + 1);
-
-      //remove last '/'
-      if (substringAfterDot.contains('/')) {
-        final int slashIndex = substringAfterDot.indexOf('/');
-        substringAfterDot = substringAfterDot.substring(0, slashIndex);
-      }
-
-      return "https://logo.clearbit.com/$substringAfterDot";
-    } else {
-      return noLogo;
+    Uri? uri;
+    try {
+      uri = Uri.parse(raw);
+    } catch (_) {
+      uri = null;
     }
+
+    // If website missing scheme (e.g. "example.com"), Uri.parse puts it in path.
+    if (uri == null || uri.host.isEmpty) {
+      try {
+        uri = Uri.parse('https://$raw');
+      } catch (_) {
+        uri = null;
+      }
+    }
+
+    final host = (uri?.host ?? '').trim();
+    if (host.isEmpty) return '';
+
+    return 'https://logo.clearbit.com/$host';
   }
 }

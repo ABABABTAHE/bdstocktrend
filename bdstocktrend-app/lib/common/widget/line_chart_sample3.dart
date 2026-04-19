@@ -30,6 +30,8 @@ class _LineChartSample3State extends State<LineChartSample3> {
   double _leftTitlesInterval = 0;
   int _leftTitlesDecimals = 0;
 
+  late final TransformationController _transformationController;
+
   double _niceInterval(double rawInterval) {
     if (rawInterval <= 0 || rawInterval.isNaN || rawInterval.isInfinite) {
       return 1;
@@ -92,7 +94,16 @@ class _LineChartSample3State extends State<LineChartSample3> {
   @override
   void initState() {
     super.initState();
+    _transformationController = TransformationController(
+      Matrix4.identity()..scale(0.9),
+    );
     _prepareStockData();
+  }
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -137,6 +148,10 @@ class _LineChartSample3State extends State<LineChartSample3> {
 
   @override
   Widget build(BuildContext context) {
+    final labelColor =
+        Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
+    final gridColor = Theme.of(context).dividerColor.withOpacity(0.35);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final pointsCount = _values.length;
@@ -159,10 +174,11 @@ class _LineChartSample3State extends State<LineChartSample3> {
               child: InteractiveViewer(
                 panEnabled: false,
                 scaleEnabled: true,
-                minScale: 1,
+                transformationController: _transformationController,
+                minScale: 0.85,
                 maxScale: 3,
                 child: LineChart(
-                  mainData(),
+                  mainData(labelColor: labelColor, gridColor: gridColor),
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.bounceIn,
                 ),
@@ -174,7 +190,7 @@ class _LineChartSample3State extends State<LineChartSample3> {
     );
   }
 
-  SideTitles bottomTitles() {
+  SideTitles bottomTitles({required Color labelColor}) {
     return SideTitles(
       showTitles: true,
       getTitlesWidget: (value, meta) {
@@ -191,10 +207,7 @@ class _LineChartSample3State extends State<LineChartSample3> {
           space: 6,
           child: Text(
             time,
-            style: const TextStyle(
-              color: Colors.white54,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: labelColor, fontSize: 12),
           ),
         );
       },
@@ -203,20 +216,13 @@ class _LineChartSample3State extends State<LineChartSample3> {
     );
   }
 
-  SideTitles leftTitles() {
+  SideTitles leftTitles({required Color labelColor}) {
     return SideTitles(
       showTitles: true,
       getTitlesWidget: (value, meta) {
-        if (value == meta.max || value == meta.min) {
-          return Container();
-        }
-
         return Text(
           value.toStringAsFixed(_leftTitlesDecimals),
-          style: const TextStyle(
-            color: Colors.white54,
-            fontSize: 14,
-          ),
+          style: TextStyle(color: labelColor, fontSize: 12),
         );
       },
       reservedSize: 40,
@@ -224,15 +230,15 @@ class _LineChartSample3State extends State<LineChartSample3> {
     );
   }
 
-  FlGridData gridData() {
+  FlGridData gridData({required Color gridColor}) {
     return FlGridData(
       show: true,
       drawVerticalLine: true,
       getDrawingHorizontalLine: (value) {
-        return const FlLine(
-          color: Colors.white24,
-          strokeWidth: 1,
-        );
+        return FlLine(color: gridColor, strokeWidth: 1);
+      },
+      getDrawingVerticalLine: (value) {
+        return FlLine(color: gridColor, strokeWidth: 1);
       },
       horizontalInterval: _leftTitlesInterval,
       /*checkToShowHorizontalLine: (value) {
@@ -241,10 +247,11 @@ class _LineChartSample3State extends State<LineChartSample3> {
     );
   }
 
-  LineChartData mainData() {
+  LineChartData mainData(
+      {required Color labelColor, required Color gridColor}) {
     return LineChartData(
       clipData: const FlClipData.all(),
-      gridData: gridData(),
+      gridData: gridData(gridColor: gridColor),
       titlesData: FlTitlesData(
         show: true,
         rightTitles: const AxisTitles(
@@ -253,8 +260,9 @@ class _LineChartSample3State extends State<LineChartSample3> {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        bottomTitles: AxisTitles(sideTitles: bottomTitles()),
-        leftTitles: AxisTitles(sideTitles: leftTitles()),
+        bottomTitles:
+            AxisTitles(sideTitles: bottomTitles(labelColor: labelColor)),
+        leftTitles: AxisTitles(sideTitles: leftTitles(labelColor: labelColor)),
       ),
       borderData: FlBorderData(
         show: true,
@@ -266,10 +274,7 @@ class _LineChartSample3State extends State<LineChartSample3> {
             (LineChartBarData barData, List<int> spotIndexes) {
           return spotIndexes.map((index) {
             return TouchedSpotIndicatorData(
-              const FlLine(
-                color: Colors.white24,
-                strokeWidth: 1,
-              ),
+              FlLine(color: gridColor, strokeWidth: 1),
               FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, bar, spotIndex) {
@@ -297,7 +302,7 @@ class _LineChartSample3State extends State<LineChartSample3> {
               );
               final value = touchedSpot.y;
               return LineTooltipItem(
-                '${DateFormat('dd/MM').format(time)}\nPrice: ${value.toStringAsFixed(4)}',
+                '${DateFormat('dd MMM').format(time)}\nPrice: ${value.toStringAsFixed(2)}',
                 const TextStyle(color: Colors.white),
               );
             }).toList();
@@ -318,8 +323,21 @@ class _LineChartSample3State extends State<LineChartSample3> {
           ),
           barWidth: 1,
           isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
+          dotData: FlDotData(
+            show: true,
+            checkToShowDot: (spot, barData) {
+              if (_values.isEmpty) return false;
+              final index = _values.indexOf(spot);
+              return index == 0 || index == _values.length - 1;
+            },
+            getDotPainter: (spot, percent, bar, spotIndex) {
+              return FlDotCirclePainter(
+                radius: 2.2,
+                color: Theme.of(context).colorScheme.surface,
+                strokeWidth: 1.6,
+                strokeColor: gradientColors.last,
+              );
+            },
           ),
           belowBarData: BarAreaData(
             show: true,

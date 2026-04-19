@@ -39,6 +39,8 @@ class _LineChartSample4State extends State<LineChartSample4> {
   double _leftTitlesInterval = 0;
   int _leftTitlesDecimals = 0;
 
+  late final TransformationController _transformationController;
+
   double _niceInterval(double rawInterval) {
     if (rawInterval <= 0 || rawInterval.isNaN || rawInterval.isInfinite) {
       return 1;
@@ -100,7 +102,16 @@ class _LineChartSample4State extends State<LineChartSample4> {
   @override
   void initState() {
     super.initState();
+    _transformationController = TransformationController(
+      Matrix4.identity()..scale(0.9),
+    );
     _prepareStockData();
+  }
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -147,15 +158,6 @@ class _LineChartSample4State extends State<LineChartSample4> {
       );
     }).toList();
 
-    print(
-        '[CHART_DEBUG] Historical data (data1): ${widget.data1.length} points, range: ${widget.data1.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data1.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
-    print(
-        '[CHART_DEBUG] Forecast data (data2): ${widget.data2.length} points, range: ${widget.data2.map((d) => d.value).reduce((a, b) => a < b ? a : b).toStringAsFixed(2)} - ${widget.data2.map((d) => d.value).reduce((a, b) => a > b ? a : b).toStringAsFixed(2)}');
-    print(
-        '[CHART_DEBUG] data1 values: ${widget.data1.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
-    print(
-        '[CHART_DEBUG] data2 values: ${widget.data2.map((d) => d.value.toStringAsFixed(2)).join(', ')}');
-
     _values2.insert(0, _values1.last);
 
     _minX = min(_values1.first.x, _values2.first.x);
@@ -167,6 +169,10 @@ class _LineChartSample4State extends State<LineChartSample4> {
 
   @override
   Widget build(BuildContext context) {
+    final labelColor =
+        Theme.of(context).colorScheme.onSurface.withOpacity(0.65);
+    final gridColor = Theme.of(context).dividerColor.withOpacity(0.35);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final pointsCount = max(_values1.length, _values2.length);
@@ -189,10 +195,11 @@ class _LineChartSample4State extends State<LineChartSample4> {
               child: InteractiveViewer(
                 panEnabled: false,
                 scaleEnabled: true,
-                minScale: 1,
+                transformationController: _transformationController,
+                minScale: 0.85,
                 maxScale: 3,
                 child: LineChart(
-                  mainData(),
+                  mainData(labelColor: labelColor, gridColor: gridColor),
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.linearToEaseOut,
                 ),
@@ -204,7 +211,7 @@ class _LineChartSample4State extends State<LineChartSample4> {
     );
   }
 
-  SideTitles bottomTitles() {
+  SideTitles bottomTitles({required Color labelColor}) {
     return SideTitles(
       showTitles: true,
       getTitlesWidget: (value, meta) {
@@ -223,10 +230,7 @@ class _LineChartSample4State extends State<LineChartSample4> {
             angle: -math.pi / 4,
             child: Text(
               time,
-              style: const TextStyle(
-                color: Colors.white54,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: labelColor, fontSize: 12),
             ),
           ),
         );
@@ -236,36 +240,29 @@ class _LineChartSample4State extends State<LineChartSample4> {
     );
   }
 
-  SideTitles leftTitles() {
+  SideTitles leftTitles({required Color labelColor}) {
     return SideTitles(
       showTitles: true,
       getTitlesWidget: (value, meta) {
-        if (value == meta.max || value == meta.min) {
-          return Container();
-        }
-
         return Text(
           value.toStringAsFixed(_leftTitlesDecimals),
-          style: const TextStyle(
-            color: Colors.white54,
-            fontSize: 14,
-          ),
+          style: TextStyle(color: labelColor, fontSize: 12),
         );
       },
-      reservedSize: 40,
+      reservedSize: 44,
       interval: _leftTitlesInterval,
     );
   }
 
-  FlGridData gridData() {
+  FlGridData gridData({required Color gridColor}) {
     return FlGridData(
       show: true,
       drawVerticalLine: true,
       getDrawingHorizontalLine: (value) {
-        return const FlLine(
-          color: Colors.white24,
-          strokeWidth: 1,
-        );
+        return FlLine(color: gridColor, strokeWidth: 1);
+      },
+      getDrawingVerticalLine: (value) {
+        return FlLine(color: gridColor, strokeWidth: 1);
       },
       /*getDrawingVerticalLine: (value) {
         return const FlLine(
@@ -280,10 +277,11 @@ class _LineChartSample4State extends State<LineChartSample4> {
     );
   }
 
-  LineChartData mainData() {
+  LineChartData mainData(
+      {required Color labelColor, required Color gridColor}) {
     return LineChartData(
       clipData: const FlClipData.all(),
-      gridData: gridData(),
+      gridData: gridData(gridColor: gridColor),
       titlesData: FlTitlesData(
         show: true,
         rightTitles: const AxisTitles(
@@ -292,8 +290,9 @@ class _LineChartSample4State extends State<LineChartSample4> {
         topTitles: const AxisTitles(
           sideTitles: SideTitles(showTitles: false),
         ),
-        bottomTitles: AxisTitles(sideTitles: bottomTitles()),
-        leftTitles: AxisTitles(sideTitles: leftTitles()),
+        bottomTitles:
+            AxisTitles(sideTitles: bottomTitles(labelColor: labelColor)),
+        leftTitles: AxisTitles(sideTitles: leftTitles(labelColor: labelColor)),
       ),
       borderData: FlBorderData(
         show: true,
@@ -309,10 +308,7 @@ class _LineChartSample4State extends State<LineChartSample4> {
 
           return spotIndexes.map((index) {
             return TouchedSpotIndicatorData(
-              const FlLine(
-                color: Colors.white24,
-                strokeWidth: 1,
-              ),
+              FlLine(color: gridColor, strokeWidth: 1),
               FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, bar, spotIndex) {
@@ -351,7 +347,7 @@ class _LineChartSample4State extends State<LineChartSample4> {
             }
 
             final buffer = StringBuffer()
-              ..write(DateFormat('dd/MM').format(time));
+              ..write(DateFormat('dd MMM').format(time));
             if (historical != null) {
               buffer.write('\nH: ${historical.toStringAsFixed(2)}');
             }
@@ -382,8 +378,21 @@ class _LineChartSample4State extends State<LineChartSample4> {
           ),
           barWidth: 1,
           isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
+          dotData: FlDotData(
+            show: true,
+            checkToShowDot: (spot, barData) {
+              if (_values1.isEmpty) return false;
+              final index = _values1.indexOf(spot);
+              return index == 0 || index == _values1.length - 1;
+            },
+            getDotPainter: (spot, percent, bar, spotIndex) {
+              return FlDotCirclePainter(
+                radius: 2.2,
+                color: Theme.of(context).colorScheme.surface,
+                strokeWidth: 1.6,
+                strokeColor: gradientColors1.last,
+              );
+            },
           ),
           belowBarData: BarAreaData(
             show: true,
@@ -402,8 +411,22 @@ class _LineChartSample4State extends State<LineChartSample4> {
           ),
           barWidth: 1,
           isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
+          dotData: FlDotData(
+            show: true,
+            checkToShowDot: (spot, barData) {
+              if (_values2.isEmpty) return false;
+              final index = _values2.indexOf(spot);
+              // Show first point (join) and last forecast point.
+              return index == 0 || index == _values2.length - 1;
+            },
+            getDotPainter: (spot, percent, bar, spotIndex) {
+              return FlDotCirclePainter(
+                radius: 2.2,
+                color: Theme.of(context).colorScheme.surface,
+                strokeWidth: 1.6,
+                strokeColor: gradientColors2.last,
+              );
+            },
           ),
           belowBarData: BarAreaData(
             show: true,

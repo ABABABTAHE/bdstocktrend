@@ -9,7 +9,8 @@ import '../models/company_details_response.dart';
 abstract class CompaniesRemoteDatasource {
   Future<Either<Failure, CompaniesResponse>> companies(UsersParams userParams);
 
-  Future<Either<Failure, CompanyDetailsResponse>> companyDetails(CompanyParams params);
+  Future<Either<Failure, CompanyDetailsResponse>> companyDetails(
+      CompanyParams params);
 }
 
 class CompaniesRemoteDatasourceImpl implements CompaniesRemoteDatasource {
@@ -18,7 +19,8 @@ class CompaniesRemoteDatasourceImpl implements CompaniesRemoteDatasource {
   CompaniesRemoteDatasourceImpl(this._client);
 
   @override
-  Future<Either<Failure, CompaniesResponse>> companies(UsersParams userParams) async {
+  Future<Either<Failure, CompaniesResponse>> companies(
+      UsersParams userParams) async {
     final response = await _client.getRequest(
       ListAPI.companies,
       queryParameters: userParams.toJson(),
@@ -30,7 +32,8 @@ class CompaniesRemoteDatasourceImpl implements CompaniesRemoteDatasource {
   }
 
   @override
-  Future<Either<Failure, CompanyDetailsResponse>> companyDetails(CompanyParams params) async {
+  Future<Either<Failure, CompanyDetailsResponse>> companyDetails(
+      CompanyParams params) async {
     final response = await _client.getRequest(
       Uri.encodeFull('${ListAPI.companies}/${params.code}'),
       converter: (response) =>
