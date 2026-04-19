@@ -196,7 +196,8 @@ class _LineChartSample3State extends State<LineChartSample3> {
       getTitlesWidget: (value, meta) {
         final DateTime date =
             DateTime.fromMillisecondsSinceEpoch(value.toInt());
-        final time = DateFormat('dd/MM').format(date);
+
+        final time = DateFormat("MMM ''yy").format(date);
 
         if (value == meta.max || value == meta.min) {
           return Container();
@@ -302,7 +303,7 @@ class _LineChartSample3State extends State<LineChartSample3> {
               );
               final value = touchedSpot.y;
               return LineTooltipItem(
-                '${DateFormat('dd MMM').format(time)}\nPrice: ${value.toStringAsFixed(2)}',
+                '${DateFormat("dd MMM ''yy").format(time)}\nPrice: ${value.toStringAsFixed(2)}',
                 const TextStyle(color: Colors.white),
               );
             }).toList();

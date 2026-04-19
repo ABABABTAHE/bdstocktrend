@@ -2,9 +2,11 @@ import 'package:bd_stock_trend/core/core.dart';
 import 'package:bd_stock_trend/features/features.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class CompanyListPage extends StatefulWidget {
@@ -29,21 +31,105 @@ class _CompanyListState extends State<CompanyListPage> {
   String _resolveLogoUrl(Company company) {
     final raw = (company.logo ?? '').trim();
     if (raw.isNotEmpty && raw.toLowerCase() != 'null') {
-      if (raw.startsWith('http://') || raw.startsWith('https://')) {
+      if (raw.startsWith('data:')) {
         return raw;
       }
+      if (raw.startsWith('http://') || raw.startsWith('https://')) {
+        return Uri.encodeFull(raw);
+      }
       if (raw.startsWith('//')) {
-        return 'https:$raw';
+        return Uri.encodeFull('https:$raw');
       }
       final base = _apiBaseUrl();
       if (raw.startsWith('/')) {
-        return '$base$raw';
+        return Uri.encodeFull('$base$raw');
       }
-      return '$base/$raw';
+      return Uri.encodeFull('$base/$raw');
     }
 
     final fallback = getDomain(company.website);
-    return fallback.isNotEmpty ? fallback : noLogo;
+    return fallback.isNotEmpty
+        ? Uri.encodeFull(fallback)
+        : Uri.encodeFull(noLogo);
+  }
+
+  Widget _fallbackLogo() {
+    return Image.network(
+      noLogo,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) => Center(
+        child: Icon(
+          Icons.image_not_supported_rounded,
+          color: Palette.subText.withOpacity(0.5),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompanyLogo(Company company) {
+    final url = _resolveLogoUrl(company);
+
+    Widget defaultFallback = Center(
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Palette.background,
+        child: Center(
+          child: Text(
+            (company.code ?? '-').isNotEmpty
+                ? (company.code ?? '-')[0].toUpperCase()
+                : '?',
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Palette.subText,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (url.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.network(
+        url,
+        fit: BoxFit.contain,
+        placeholderBuilder: (context) => const Center(
+          child: CupertinoActivityIndicator(),
+        ),
+        errorBuilder: (context, error, stackTrace) {
+          final clearbit = getDomain(company.website);
+          if (clearbit.isNotEmpty) {
+            return CachedNetworkImage(
+              imageUrl: clearbit,
+              fit: BoxFit.contain,
+              errorWidget: (context, error, stackTrace) => defaultFallback,
+            );
+          }
+
+          return defaultFallback;
+        },
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.contain,
+      placeholder: (context, url) => const Center(
+        child: CupertinoActivityIndicator(),
+      ),
+      errorWidget: (context, failingUrl, error) {
+        final clearbit = getDomain(company.website);
+        if (clearbit.isNotEmpty && failingUrl != clearbit) {
+          return CachedNetworkImage(
+            imageUrl: clearbit,
+            fit: BoxFit.contain,
+            errorWidget: (context, error, stackTrace) => defaultFallback,
+          );
+        }
+
+        return defaultFallback;
+      },
+    );
   }
 
   @override
@@ -73,13 +159,16 @@ class _CompanyListState extends State<CompanyListPage> {
       if (query.isEmpty) {
         _filteredItems.addAll(_companies);
       } else {
-        _filteredItems.addAll(_companies
-            .where((item) =>
-                item.name!.toLowerCase().contains(query.toLowerCase()) ||
-                item.code!.toLowerCase().contains(query.toLowerCase()))
-            .toList());
+        _filteredItems.addAll(
+          _companies
+              .where((item) =>
+                  (item.name ?? '')
+                      .toLowerCase()
+                      .contains(query.toLowerCase()) ||
+                  (item.code ?? '').toLowerCase().contains(query.toLowerCase()))
+              .toList(),
+        );
       }
-      print('Size ${_filteredItems.length}');
     });
   }
 
@@ -123,8 +212,9 @@ class _CompanyListState extends State<CompanyListPage> {
                             itemBuilder: (context, index) {
                               final company = _filteredItems[index];
                               return Padding(
-                                padding:
-                                    EdgeInsets.only(bottom: Dimens.space12),
+                                padding: EdgeInsets.only(
+                                  bottom: Dimens.space12,
+                                ),
                                 child: Card(
                                   clipBehavior: Clip.antiAlias,
                                   child: InkWell(
@@ -134,9 +224,11 @@ class _CompanyListState extends State<CompanyListPage> {
                                         pathParameters: {
                                           'code': company.code ?? '',
                                         },
-                                      ).then((value) => context
-                                          .read<MainCubit>()
-                                          .updateIndex(1));
+                                      ).then(
+                                        (value) => context
+                                            .read<MainCubit>()
+                                            .updateIndex(1),
+                                      );
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.all(Dimens.space12),
@@ -149,54 +241,15 @@ class _CompanyListState extends State<CompanyListPage> {
                                               color: Palette.background,
                                               borderRadius:
                                                   BorderRadius.circular(
-                                                      Dimens.radiusSmall),
+                                                Dimens.radiusSmall,
+                                              ),
                                             ),
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(
-                                                      Dimens.radiusSmall),
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    _resolveLogoUrl(company),
-                                                fit: BoxFit.contain,
-                                                placeholder: (context, url) =>
-                                                    const Center(
-                                                  child:
-                                                      CupertinoActivityIndicator(),
-                                                ),
-                                                errorWidget:
-                                                    (context, url, error) {
-                                                  final clearbit = getDomain(
-                                                      company.website);
-                                                  if (clearbit.isNotEmpty &&
-                                                      url != clearbit) {
-                                                    return Image.network(
-                                                      clearbit,
-                                                      fit: BoxFit.contain,
-                                                      errorBuilder: (context,
-                                                              error,
-                                                              stackTrace) =>
-                                                          Center(
-                                                        child: Icon(
-                                                          Icons
-                                                              .image_not_supported_rounded,
-                                                          color: Palette.subText
-                                                              .withOpacity(0.5),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-
-                                                  return Center(
-                                                    child: Icon(
-                                                      Icons
-                                                          .image_not_supported_rounded,
-                                                      color: Palette.subText
-                                                          .withOpacity(0.5),
-                                                    ),
-                                                  );
-                                                },
+                                                Dimens.radiusSmall,
                                               ),
+                                              child: _buildCompanyLogo(company),
                                             ),
                                           ),
                                           const SpacerH(value: 16),
@@ -206,7 +259,7 @@ class _CompanyListState extends State<CompanyListPage> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  company.code ?? "-",
+                                                  company.code ?? '-',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .titleMedium
@@ -216,7 +269,7 @@ class _CompanyListState extends State<CompanyListPage> {
                                                       ),
                                                 ),
                                                 Text(
-                                                  company.name ?? "-",
+                                                  company.name ?? '-',
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -247,9 +300,11 @@ class _CompanyListState extends State<CompanyListPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.search_off_rounded,
-                                    size: 64,
-                                    color: Palette.subText.withOpacity(0.5)),
+                                Icon(
+                                  Icons.search_off_rounded,
+                                  size: 64,
+                                  color: Palette.subText.withOpacity(0.5),
+                                ),
                                 const SpacerV(value: 12),
                                 Text(
                                   'No companies found',

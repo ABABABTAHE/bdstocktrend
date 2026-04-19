@@ -217,7 +217,8 @@ class _LineChartSample4State extends State<LineChartSample4> {
       getTitlesWidget: (value, meta) {
         final DateTime date =
             DateTime.fromMillisecondsSinceEpoch(value.toInt());
-        final time = DateFormat('dd/MM').format(date);
+
+        final time = DateFormat("MMM ''yy").format(date);
 
         if (value == meta.max || value == meta.min) {
           return Container();
@@ -347,7 +348,7 @@ class _LineChartSample4State extends State<LineChartSample4> {
             }
 
             final buffer = StringBuffer()
-              ..write(DateFormat('dd MMM').format(time));
+              ..write(DateFormat("dd MMM ''yy").format(time));
             if (historical != null) {
               buffer.write('\nH: ${historical.toStringAsFixed(2)}');
             }
@@ -355,12 +356,16 @@ class _LineChartSample4State extends State<LineChartSample4> {
               buffer.write('\nF: ${forecast.toStringAsFixed(2)}');
             }
 
-            return [
-              LineTooltipItem(
-                buffer.toString(),
-                const TextStyle(color: Colors.white),
-              ),
-            ];
+            // fl_chart 1.1.1 requires tooltipItems.length == touchedSpots.length.
+            return touchedSpots.map<LineTooltipItem?>((spot) {
+              if (identical(spot, touchedSpots.first)) {
+                return LineTooltipItem(
+                  buffer.toString(),
+                  const TextStyle(color: Colors.white),
+                );
+              }
+              return null;
+            }).toList();
           },
         ),
         handleBuiltInTouches: true,

@@ -54,6 +54,10 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage>
     // Keep charts a bit more compact; users can pinch-zoom inside the chart.
     final chartHeight = (screenWidth * 0.72).clamp(280.0, 420.0);
 
+    final historicalForForecast = data.last30Days.length > 7
+        ? data.last30Days.sublist(data.last30Days.length - 7)
+        : data.last30Days;
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -85,7 +89,7 @@ class _CompanyDetailsPageState extends State<CompanyDetailsPage>
                     ),
                   if (data.next30Days.isNotEmpty)
                     LineChartSample4(
-                      data1: data.last30Days,
+                      data1: historicalForForecast,
                       data2: data.next30Days,
                     )
                   else
